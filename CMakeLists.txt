@@ -1,22 +1,32 @@
-cmake_minimum_required(VERSION 3.12)
-project(MyApp)
+cmake_minimum_required(VERSION 3.10)
+project(HelloWorld)
  
-# Locate and configure Google Test
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
+# Set C++ standard to C++11
+set(CMAKE_CXX_STANDARD 11)
  
-# Create an executable for the main program
+# Add the executable for the main program
 add_executable(main main.cpp)
  
-# Create an executable for the tests
+# Add the executable for the tests
 add_executable(tests test.cpp)
  
-# Link the main program with Google Test
-target_link_libraries(main PRIVATE ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+# Include Google Test
+include(GoogleTest)
+gtest_discover_tests(tests)
  
-# Link the tests with Google Test and the main program
-target_link_libraries(tests PRIVATE ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+# Set up Cppcheck
+find_program(CPPCHECK cppcheck)
+if(CPPCHECK)
+    set(CPPCHECK_COMMAND ${CPPCHECK} ARGS --project=cppcheck-config.txt --inline-suppr --quiet)
+    add_custom_target(run-cppcheck ALL
+        COMMAND ${CPPCHECK_COMMAND} ${CMAKE_SOURCE_DIR}/main.cpp
+        COMMENT "Running Cppcheck on main.cpp"
+    )
+endif()
  
-# Optionally, you can enable C++11 features
-target_compile_features(main PRIVATE cxx_std_11)
-target_compile_features(tests PRIVATE cxx_std_11)
+# Link Google Test
+target_link_libraries(tests gtest gtest_main)
+ 
+# Enable testing
+enable_testing()
+add_test(NAME HelloWorldTests COMMAND tests)

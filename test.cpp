@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
  
-TEST(SimpleTest, Addition) {
-    EXPECT_EQ(1 + 1, 2);
+TEST(HelloWorldTest, BasicTest) {
+    EXPECT_EQ(1, 1);
 }
  
 int main(int argc, char** argv) {
