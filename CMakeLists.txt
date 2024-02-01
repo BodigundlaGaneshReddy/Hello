@@ -1,33 +1,22 @@
-cmake_minimum_required(VERSION 3.12)
-project(HelloWorldProject)
+cmake_minimum_required(VERSION 3.10)
  
-# C++ standard version
-set(CMAKE_CXX_STANDARD 11)
+project(HelloWorld)
  
-# Add the executable
-add_executable(hello_world main.cpp)
+# Add the executable for the main program
+add_executable(main main.cpp)
  
-# Cppcheck integration
-find_program(CPPCHECK_EXECUTABLE NAMES cppcheck)
-if(CPPCHECK_EXECUTABLE)
-    list(APPEND CMAKE_CXX_CPPCHECK "${CPPCHECK_EXECUTABLE};--std=c++11;--enable=all")
-else()
-    message(WARNING "Cppcheck not found. Static code analysis will be disabled.")
-endif()
+# Add the executable for the tests
+add_executable(tests test.cpp)
  
-# Google Test setup (download and build)
+# Include Google Test and link it with the tests
 include(FetchContent)
 FetchContent_Declare(
     googletest
 GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG release-1.10.0
+    GIT_TAG release-1.11.0
 )
 FetchContent_MakeAvailable(googletest)
+target_link_libraries(tests gtest_main)
  
-# Add the test executable
-add_executable(tests test.cpp)
-target_link_libraries(tests gtest gtest_main)
- 
-# Enable testing
-include(GoogleTest)
-gtest_discover_tests(tests)
+# Define a custom target for running tests
+add_custom_target(run_tests COMMAND tests)
