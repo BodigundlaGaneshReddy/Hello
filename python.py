@@ -3,7 +3,7 @@ import xmltodict
 from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
  
 # Fetch XML file from Jenkins
-jenkins_url = '52.206.112.249:8080/job/Hello/15/execution/node/3/ws/cppcheck-results.xml'
+jenkins_url = 'http://3.85.83.67:8080/job/Hello/15/execution/node/3/ws/cppcheck-results.xml'
 xml_data = requests.get(jenkins_url).content
  
 # Parse XML
@@ -13,7 +13,7 @@ parsed_xml = xmltodict.parse(xml_data)
 # ...
  
 # Prometheus Pushgateway setup
-pushgateway_url = '52.206.112.249:9090'
+pushgateway_url = '3.85.83.67:9090'
 registry = CollectorRegistry()
  
 # Define your metrics
